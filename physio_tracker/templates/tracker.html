@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="tracker-container">
+    <h2>Tracker: <span id="exerciseName">{{ exercise }}</span></h2>
+    
+    <div class="video-wrapper">
+        <!-- Hidden video element for camera feed -->
+        <video id="videoElement" autoplay playsinline style="display: none;"></video>
+        <!-- Canvas for rendering video + mediapipe + overlays -->
+        <canvas id="outputCanvas" width="640" height="480"></canvas>
+        <div id="feedbackOverlay" class="feedback-overlay">Good posture!</div>
+        <div id="bigRepCount" class="big-rep-count">0</div>
+    </div>
+
+    <div class="tracker-stats">
+        <div>Validated Reps: <span id="repCount">0</span></div>
+        <div>Target Angle: <span id="targetAngle">{{ params.target_angle }}</span>°</div>
+        <div>Current Angle: <span id="currentAngle">0</span>°</div>
+        <div>Status: <span id="evalStatus">Evaluating...</span></div>
+    </div>
+    
+    <button id="endSessionBtn" class="btn" style="background-color: #e74c3c; margin-top: 20px;">End Session</button>
+</div>
+
+<!-- Parameters for JS logic -->
+<script>
+    const exerciseParams = {
+        minAngle: {{ params.min_angle }},
+        maxAngle: {{ params.max_angle }},
+        targetAngle: {{ params.target_angle }}
+    };
+</script>
+
+<!-- MediaPipe dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+<script src="{{ url_for('static', filename='js/tracker.js') }}"></script>
+{% endblock %}

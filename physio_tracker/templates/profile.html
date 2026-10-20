@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="profile">
+    <h2>Patient Profile</h2>
+    <form method="POST" action="{{ url_for('profile') }}">
+        <div class="form-section">
+            <h3>Personal Details</h3>
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" name="first_name" value="{{ user.profile.first_name or '' }}">
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" name="last_name" value="{{ user.profile.last_name or '' }}">
+            </div>
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" name="age" value="{{ user.profile.age or '' }}">
+            </div>
+            <div class="form-group">
+                <label>Condition</label>
+                <input type="text" name="condition" value="{{ user.profile.condition or '' }}">
+            </div>
+            <div class="form-group">
+                <label>Protocol</label>
+                <input type="text" name="protocol" value="{{ user.profile.protocol or '' }}">
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Exercise Parameters (Target Angles)</h3>
+            {% for param in user.parameters %}
+            <div class="param-group">
+                <h4>{{ param.exercise_name }}</h4>
+                <div class="param-inputs">
+                    <label>Min Angle:</label>
+                    <input type="number" step="0.1" name="{{ param.exercise_name }}_min" value="{{ param.min_angle }}">
+                    <label>Max Angle:</label>
+                    <input type="number" step="0.1" name="{{ param.exercise_name }}_max" value="{{ param.max_angle }}">
+                    <label>Target Angle (Normal):</label>
+                    <input type="number" step="0.1" name="{{ param.exercise_name }}_target" value="{{ param.target_angle }}">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn">Save Profile</button>
+    </form>
+</div>
+{% endblock %}

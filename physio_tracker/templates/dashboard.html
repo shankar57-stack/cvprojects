@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard">
+    <h2>Welcome, {{ current_user.username }}</h2>
+    
+    <div class="exercises setup-form-container">
+        <h3>Start New Session</h3>
+        <form method="POST" action="{{ url_for('start_session') }}" class="setup-form">
+            <div class="form-group">
+                <label>Medical Condition</label>
+                <input type="text" name="condition" value="{{ user.profile.condition or '' }}" placeholder="e.g., Post-ACL Surgery">
+            </div>
+            <div class="form-group">
+                <label>Target Body Part</label>
+                <select name="body_part" id="bodyPartSelect">
+                    <option value="Legs">Legs</option>
+                    <option value="Chest">Chest</option>
+                    <option value="Shoulders">Shoulders</option>
+                    <option value="Full Body">Full Body</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Select Exercise</label>
+                <select name="exercise" id="exerciseSelect">
+                    <option value="Squats">Squats</option>
+                    <option value="Lunges">Lunges</option>
+                    <option value="Push-ups">Push-ups</option>
+                    <option value="Jumping Jacks">Jumping Jacks</option>
+                    <option value="Shoulder Press">Shoulder Press</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="font-size: 1.2rem; width: 100%;">Start Camera & Tracker</button>
+        </form>
+    </div>
+
+    <div class="history">
+        <h3>Session History</h3>
+        {% if sessions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Exercise</th>
+                    <th>Duration (s)</th>
+                    <th>Validated Reps</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in sessions %}
+                <tr>
+                    <td>{{ session.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ session.exercise_name }}</td>
+                    <td>{{ session.duration_seconds }}</td>
+                    <td>{{ session.validated_reps }}</td>
+                    <td><a href="{{ url_for('report', session_id=session.id) }}" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">View Report</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No sessions logged yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    const exerciseMap = {
+        'Legs': ['Squats', 'Lunges'],
+        'Chest': ['Push-ups'],
+        'Shoulders': ['Shoulder Press'],
+        'Full Body': ['Jumping Jacks']
+    };
+
+    const bodyPartSelect = document.getElementById('bodyPartSelect');
+    const exerciseSelect = document.getElementById('exerciseSelect');
+
+    function updateExercises() {
+        const selectedPart = bodyPartSelect.value;
+        const exercises = exerciseMap[selectedPart] || [];
+        
+        exerciseSelect.innerHTML = '';
+        exercises.forEach(ex => {
+            const option = document.createElement('option');
+            option.value = ex;
+            option.textContent = ex;
+            exerciseSelect.appendChild(option);
+        });
+    }
+
+    bodyPartSelect.addEventListener('change', updateExercises);
+    // Initialize on load
+    updateExercises();
+</script>
+{% endblock %}

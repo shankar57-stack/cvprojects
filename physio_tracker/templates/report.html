@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="auth-form" style="max-width: 600px;">
+    <h2>Session Report</h2>
+    <div style="margin: 20px 0; font-size: 1.1rem; line-height: 1.8;">
+        <p><strong>Date:</strong> {{ session.date.strftime('%Y-%m-%d %H:%M') }}</p>
+        <p><strong>Exercise:</strong> {{ session.exercise_name }}</p>
+        <p><strong>Duration:</strong> {{ session.duration_seconds }} seconds</p>
+        <p><strong>Reps Completed:</strong> {{ session.validated_reps }} / 10</p>
+        <hr>
+        <p><em>Great job completing your session! Keep up the good work to improve your recovery.</em></p>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary" style="width: 100%; text-align: center;">Return to Dashboard</a>
+</div>
+{% endblock %}
